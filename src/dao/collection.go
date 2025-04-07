@@ -493,8 +493,8 @@ func GetHoldersCountKey(chain string) string {
 }
 
 // QueryCollectionFloorChange 查询集合地板价变化情况
-// @param chain string 链名称
-// @param timeDiff int64 时间差(秒)
+// @Param chain query string true "链名称"
+// @Param timeDiff query int64 true "时间差(秒)"
 // @return map[string]float64 返回集合地址到地板价变化率的映射
 // @return error 错误信息
 func (d *Dao) QueryCollectionFloorChange(chain string, timeDiff int64) (map[string]float64, error) {
@@ -556,8 +556,7 @@ func (d *Dao) QueryCollectionFloorChange(chain string, timeDiff int64) (map[stri
 }
 
 // QueryCollectionsSellPrice 查询所有集合的最高卖单价格
-// @param ctx context.Context 上下文
-// @param chain string 链名称
+// @Param chain query string true "链名称"
 // @return []multi.Collection 返回集合列表,每个集合包含地址和最高卖单价格
 // @return error 错误信息
 func (d *Dao) QueryCollectionsSellPrice(ctx context.Context, chain string) ([]multi.Collection, error) {

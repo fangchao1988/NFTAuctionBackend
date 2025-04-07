@@ -2,12 +2,13 @@ package v1
 
 import (
 	"encoding/json"
+	"github.com/ProjectsTask/EasySwapBase/errcode"
+	//"github.com/ProjectsTask/EasySwapBackend/src/errcode"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 
-	"github.com/ProjectsTask/EasySwapBase/errcode"
 	"github.com/ProjectsTask/EasySwapBase/logger/xzap"
 	"github.com/ProjectsTask/EasySwapBase/xhttp"
 
@@ -16,6 +17,18 @@ import (
 	"github.com/ProjectsTask/EasySwapBackend/src/types/v1"
 )
 
+// CollectionItemsHandler godoc
+// @Summary 获取集合中的物品列表
+// @Description 根据过滤条件获取指定集合中的NFT物品列表
+// @Tags collections
+// @Accept json
+// @Produce json
+// @Param address path string true "集合地址"
+// @Param filters query string true "过滤参数，JSON格式"
+// @Success 200 {object} interface{} "物品列表"
+// @Failure 400 {object} errcode.Error "参数错误"
+// @Failure 500 {object} errcode.Error "服务器内部错误"
+// @Router /collections/{address}/items [get]
 func CollectionItemsHandler(svcCtx *svc.ServerCtx) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		filterParam := c.Query("filters")
@@ -51,8 +64,21 @@ func CollectionItemsHandler(svcCtx *svc.ServerCtx) gin.HandlerFunc {
 	}
 }
 
+// CollectionBidsHandler godoc
+// @Summary 获取集合的出价信息
+// @Description 获取指定集合的所有出价信息
+// @Tags collections
+// @Accept json
+// @Produce json
+// @Param address path string true "集合地址"
+// @Param filters query string true "过滤参数，JSON格式"
+// @Success 200 {object} interface{} "出价信息列表"
+// @Failure 400 {object} errcode.Error "参数错误"
+// @Failure 500 {object} errcode.Error "服务器内部错误"
+// @Router /collections/{address}/bids [get]
 func CollectionBidsHandler(svcCtx *svc.ServerCtx) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		//c.Query：写到query的参数
 		filterParam := c.Query("filters")
 		if filterParam == "" {
 			xhttp.Error(c, errcode.NewCustomErr("Filter param is nil."))
@@ -66,6 +92,7 @@ func CollectionBidsHandler(svcCtx *svc.ServerCtx) gin.HandlerFunc {
 			return
 		}
 
+		//c.Params.ByName:写到路径上的参数
 		collectionAddr := c.Params.ByName("address")
 		if collectionAddr == "" {
 			xhttp.Error(c, errcode.ErrInvalidParams)
@@ -87,6 +114,19 @@ func CollectionBidsHandler(svcCtx *svc.ServerCtx) gin.HandlerFunc {
 	}
 }
 
+// CollectionItemBidsHandler godoc
+// @Summary 获取集合中特定物品的出价信息
+// @Description 获取集合中指定物品的所有出价信息
+// @Tags collections
+// @Accept json
+// @Produce json
+// @Param address path string true "集合地址"
+// @Param token_id path string true "物品Token ID"
+// @Param filters query string true "过滤参数，JSON格式"
+// @Success 200 {object} interface{} "物品出价信息列表"
+// @Failure 400 {object} errcode.Error "参数错误"
+// @Failure 500 {object} errcode.Error "服务器内部错误"
+// @Router /collections/{address}/{token_id}/bids [get]
 func CollectionItemBidsHandler(svcCtx *svc.ServerCtx) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		filterParam := c.Query("filters")
@@ -129,6 +169,19 @@ func CollectionItemBidsHandler(svcCtx *svc.ServerCtx) gin.HandlerFunc {
 	}
 }
 
+// ItemDetailHandler godoc
+// @Summary 获取物品详情
+// @Description 获取指定物品的详细信息
+// @Tags collections
+// @Accept json
+// @Produce json
+// @Param address path string true "集合地址"
+// @Param token_id path string true "物品Token ID"
+// @Param chain_id query int true "链ID"
+// @Success 200 {object} interface{} "物品详情"
+// @Failure 400 {object} errcode.Error "参数错误"
+// @Failure 500 {object} errcode.Error "服务器内部错误"
+// @Router /collections/{address}/{token_id} [get]
 func ItemDetailHandler(svcCtx *svc.ServerCtx) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		collectionAddr := c.Params.ByName("address")
@@ -165,6 +218,18 @@ func ItemDetailHandler(svcCtx *svc.ServerCtx) gin.HandlerFunc {
 	}
 }
 
+// ItemTopTraitPriceHandler godoc
+// @Summary 获取物品特性的最高价格信息
+// @Description 获取指定集合中物品特性的最高价格信息
+// @Tags collections
+// @Accept json
+// @Produce json
+// @Param address path string true "集合地址"
+// @Param filters query string true "过滤参数，JSON格式"
+// @Success 200 {object} interface{} "特性价格信息"
+// @Failure 400 {object} errcode.Error "参数错误"
+// @Failure 500 {object} errcode.Error "服务器内部错误"
+// @Router /collections/{address}/top-trait [get]
 func ItemTopTraitPriceHandler(svcCtx *svc.ServerCtx) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		collectionAddr := c.Params.ByName("address")
@@ -201,6 +266,19 @@ func ItemTopTraitPriceHandler(svcCtx *svc.ServerCtx) gin.HandlerFunc {
 	}
 }
 
+// HistorySalesHandler godoc
+// @Summary 获取历史销售价格信息
+// @Description 获取指定集合的历史销售价格信息
+// @Tags collections
+// @Accept json
+// @Produce json
+// @Param address path string true "集合地址"
+// @Param chain_id query int true "链ID"
+// @Param duration query string false "时间范围(24h/7d/30d)" default(7d)
+// @Success 200 {object} interface{} "历史销售价格信息"
+// @Failure 400 {object} errcode.Error "参数错误"
+// @Failure 500 {object} errcode.Error "服务器内部错误"
+// @Router /collections/{address}/history-sales [get]
 func HistorySalesHandler(svcCtx *svc.ServerCtx) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		collectionAddr := c.Params.ByName("address")
@@ -251,6 +329,19 @@ func HistorySalesHandler(svcCtx *svc.ServerCtx) gin.HandlerFunc {
 	}
 }
 
+// ItemTraitsHandler godoc
+// @Summary 获取物品特性信息
+// @Description 获取指定物品的特性(Attribute)信息
+// @Tags collections
+// @Accept json
+// @Produce json
+// @Param address path string true "集合地址"
+// @Param token_id path string true "物品Token ID"
+// @Param chain_id query int true "链ID"
+// @Success 200 {object} interface{} "物品特性信息"
+// @Failure 400 {object} errcode.Error "参数错误"
+// @Failure 500 {object} errcode.Error "服务器内部错误"
+// @Router /collections/{address}/{token_id}/traits [get]
 func ItemTraitsHandler(svcCtx *svc.ServerCtx) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		collectionAddr := c.Params.ByName("address")

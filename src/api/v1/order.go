@@ -12,6 +12,17 @@ import (
 	"github.com/ProjectsTask/EasySwapBackend/src/types/v1"
 )
 
+// OrderInfosHandler godoc
+// @Summary 批量查询出价信息
+// @Description 批量查询出价信息
+// @Tags user
+// @Accept json
+// @Produce json
+// @Param filters query string true "过滤参数，JSON格式"
+// @Success 200 {object} interface{} "出价信息列表"
+// @Failure 400 {object} errcode.Error "参数错误"
+// @Failure 500 {object} errcode.Error "服务器内部错误"
+// @Router /portfolio/bid-orders [post]
 func OrderInfosHandler(svcCtx *svc.ServerCtx) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		filterParam := c.Query("filters")

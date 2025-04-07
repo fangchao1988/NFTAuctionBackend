@@ -2,6 +2,9 @@ package main
 
 import (
 	"flag"
+	_ "github.com/ProjectsTask/EasySwapBackend/src/docs"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	_ "net/http/pprof"
 
 	"github.com/ProjectsTask/EasySwapBackend/src/api/router"
@@ -16,6 +19,21 @@ const (
 	defaultConfigPath = "./config/config.toml"
 )
 
+// @title NFT Auction API
+// @version 1.0
+// @description NFT Auction Backend API Documentation
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name API Support
+// @contact.url http://www.nftauction.com/support
+// @contact.email support@nftauction.com
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host localhost:8080
+// @BasePath /api/v1
+// @schemes http https
 func main() {
 	conf := flag.String("conf", defaultConfigPath, "conf file path")
 	flag.Parse()
@@ -36,6 +54,9 @@ func main() {
 	}
 	// Initialize router
 	r := router.NewRouter(serverCtx)
+	// 添加swagger路由
+	url := ginSwagger.URL("/src/docs/swagger.json") // The url pointing to API definition
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 	app, err := app.NewPlatform(c, r, serverCtx)
 	if err != nil {
 		panic(err)
