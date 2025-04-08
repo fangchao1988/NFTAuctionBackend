@@ -54,4 +54,9 @@ func loadV1(r *gin.Engine, svcCtx *svc.ServerCtx) {
 	{
 		orders.GET("", v1.OrderInfosHandler(svcCtx)) // 批量查询出价信息
 	}
+
+	uploadFile := apiV1.Group("/uploadFile")
+	{
+		uploadFile.POST("/creatNFT", v1.UploadHandler(svcCtx)) // 批量查询出价信息
+	}
 }
