@@ -534,8 +534,8 @@ type CreateNftRequest struct {
 }
 
 // CreateNft godoc
-// @Summary 铸造nft
-// @Description 铸造nft
+// @Summary 保存 NFT 信息
+// @Description 保存 NFT 信息
 // @Tags collections
 // @Accept json
 // @Produce json

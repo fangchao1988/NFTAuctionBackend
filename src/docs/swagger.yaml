@@ -291,7 +291,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: 铸造nft
+      description: 保存 NFT 信息
       parameters:
       - description: nft名称
         in: query
@@ -337,7 +337,7 @@ paths:
           description: 服务器内部错误
           schema:
             $ref: '#/definitions/errcode.Error'
-      summary: 铸造nft
+      summary: 保存 NFT 信息
       tags:
       - collections
   /portfolio/bid-orders:

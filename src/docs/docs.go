@@ -26,7 +26,7 @@ const docTemplate = `{
     "paths": {
         "/collections/createNft": {
             "post": {
-                "description": "铸造nft",
+                "description": "保存 NFT 信息",
                 "consumes": [
                     "application/json"
                 ],
@@ -36,7 +36,7 @@ const docTemplate = `{
                 "tags": [
                     "collections"
                 ],
-                "summary": "铸造nft",
+                "summary": "保存 NFT 信息",
                 "parameters": [
                     {
                         "type": "string",
