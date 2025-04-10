@@ -2,7 +2,11 @@ package v1
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/ProjectsTask/EasySwapBackend/src/service/v1"
+	"github.com/ProjectsTask/EasySwapBackend/src/types/v1"
 	"github.com/ProjectsTask/EasySwapBase/errcode"
+
 	//"github.com/ProjectsTask/EasySwapBackend/src/errcode"
 	"strconv"
 
@@ -13,8 +17,6 @@ import (
 	"github.com/ProjectsTask/EasySwapBase/xhttp"
 
 	"github.com/ProjectsTask/EasySwapBackend/src/service/svc"
-	"github.com/ProjectsTask/EasySwapBackend/src/service/v1"
-	"github.com/ProjectsTask/EasySwapBackend/src/types/v1"
 )
 
 // CollectionItemsHandler godoc
@@ -513,6 +515,79 @@ func CollectionDetailHandler(svcCtx *svc.ServerCtx) gin.HandlerFunc {
 			return
 		}
 		res, err := service.GetCollectionDetail(c.Request.Context(), svcCtx, chain, collectionAddr)
+		if err != nil {
+			xhttp.Error(c, errcode.ErrUnexpected)
+			return
+		}
+
+		xhttp.OkJson(c, res)
+	}
+}
+
+type CreateNftRequest struct {
+	name              string `form:"name" binding:"required"`               //
+	description       string `form:"description" binding:"required"`        //
+	imageUrl          string `form:"image_url" binding:"required"`          //
+	royaltyPercentage string `form:"royalty_percentage" binding:"required"` //
+	chainId           string `form:"chain_id" binding:"required"`           //
+	categorieId       string `form:"categorie_id" binding:"required"`       //
+}
+
+// CreateNft godoc
+// @Summary 铸造nft
+// @Description 铸造nft
+// @Tags collections
+// @Accept json
+// @Produce json
+// @Param name query string true "nft名称"
+// @Param description query string true "NFT描述"
+// @Param imageUrl query string true "NFT图片URL"
+// @Param royaltyPercentage query string true "版税百分比"
+// @Param chainId query string true "所属区块链网络id"
+// @Param categorieId query string true "类别id"
+// @Success 200 {object} interface{} "出价信息列表"
+// @Failure 400 {object} errcode.Error "参数错误"
+// @Failure 500 {object} errcode.Error "服务器内部错误"
+// @Router /collections/createNft [post]
+func CreateNft(svcCtx *svc.ServerCtx) gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		req := new(CreateNftRequest)
+		fmt.Println("我看req", req)
+		name := c.Query("name")
+		if name == "" {
+			xhttp.Error(c, errcode.NewCustomErr("name param is nil."))
+			return
+		}
+		description := c.Query("description")
+		if description == "" {
+			xhttp.Error(c, errcode.NewCustomErr("description param is nil."))
+			return
+		}
+		imageUrl := c.Query("imageUrl")
+		if imageUrl == "" {
+			xhttp.Error(c, errcode.NewCustomErr("imageUrl param is nil."))
+			return
+		}
+		royaltyPercentage := c.Query("royaltyPercentage")
+		if royaltyPercentage == "" {
+			xhttp.Error(c, errcode.NewCustomErr("royaltyPercentage param is nil."))
+			return
+		}
+
+		chainId, err := strconv.ParseInt(c.Query("chainId"), 10, 32)
+		if err != nil {
+			xhttp.Error(c, errcode.ErrInvalidParams)
+			return
+		}
+
+		categorieId, err := strconv.ParseInt(c.Query("categorieId"), 10, 32)
+		if err != nil {
+			xhttp.Error(c, errcode.ErrInvalidParams)
+			return
+		}
+
+		res, err := service.CreateNft(c.Request.Context(), svcCtx, int(chainId), int(categorieId), royaltyPercentage, imageUrl, description, name)
 		if err != nil {
 			xhttp.Error(c, errcode.ErrUnexpected)
 			return

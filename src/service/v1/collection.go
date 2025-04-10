@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/ProjectsTask/EasySwapBase/errcode"
 	"github.com/ProjectsTask/EasySwapBase/evm/eip"
@@ -778,6 +779,37 @@ func GetCollectionDetail(ctx context.Context, svcCtx *svc.ServerCtx, chain strin
 	return &types.CollectionDetailResp{
 		Result: detail,
 	}, nil
+}
+
+func CreateNft(ctx context.Context, svcCtx *svc.ServerCtx, chain int, categorie int, royaltyPercentage string, imageUrl string, description string, name string) (*types.CreateNftResp, error) {
+	newNFT := multi.Nft{
+		NftId:             1,
+		TokenId:           "",
+		ContractAddress:   "",
+		ChainId:           int64(chain),
+		Category:          int64(categorie),
+		Name:              name,
+		Description:       description,
+		ImagUrl:           imageUrl,
+		ThumbnailUrl:      imageUrl,
+		MetadataUrl:       imageUrl,
+		CreatorId:         "",
+		OwnerId:           "",
+		RoyaltyPercentage: royaltyPercentage,
+		TokenStandard:     "ERC721",
+		TotalSupply:       1,
+		IsMinted:          0,
+		MintedAt:          time.Now().Unix(),
+		CreatedAt:         time.Now().Unix(),
+		UpdatedAt:         time.Now().Unix(),
+		Status:            "",
+	}
+
+	isSuccess, err := svcCtx.Dao.CreateNft(ctx, newNFT)
+	if err != nil {
+		xzap.WithContext(ctx).Error("failed on CreateNft", zap.Error(err))
+	}
+	return &types.CreateNftResp{Result: isSuccess}, nil
 }
 
 // RefreshItemMetadata refresh item meta data.

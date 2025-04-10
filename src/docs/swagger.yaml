@@ -287,6 +287,59 @@ paths:
       summary: 获取物品特性的最高价格信息
       tags:
       - collections
+  /collections/createNft:
+    post:
+      consumes:
+      - application/json
+      description: 铸造nft
+      parameters:
+      - description: nft名称
+        in: query
+        name: name
+        required: true
+        type: string
+      - description: NFT描述
+        in: query
+        name: description
+        required: true
+        type: string
+      - description: NFT图片URL
+        in: query
+        name: imageUrl
+        required: true
+        type: string
+      - description: 版税百分比
+        in: query
+        name: royaltyPercentage
+        required: true
+        type: string
+      - description: 所属区块链网络id
+        in: query
+        name: chainId
+        required: true
+        type: string
+      - description: 类别id
+        in: query
+        name: categorieId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 出价信息列表
+          schema: {}
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/errcode.Error'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/errcode.Error'
+      summary: 铸造nft
+      tags:
+      - collections
   /portfolio/bid-orders:
     post:
       consumes:

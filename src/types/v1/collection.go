@@ -15,6 +15,17 @@ type CollectionItemFilterParams struct {
 	PageSize    int    `json:"page_size"`
 }
 
+type CreateNftParams struct {
+	Sort        int    `json:"sort"`    //1- listing_price  2-listing_time 3-sale_price
+	Status      []int  `json:"status"`  // 1 buy now  2 has offer  3 全选
+	Markets     []int  `json:"markets"` // 0:ns 1:os 2:looksrare 3:x2y2
+	TokenID     string `json:"token_id"`
+	UserAddress string `json:"user_address"`
+	ChainID     int    `json:"chain_id"`
+	Page        int    `json:"page"`
+	PageSize    int    `json:"page_size"`
+}
+
 type CollectionBidFilterParams struct {
 	ChainID  int `json:"chain_id"`
 	Page     int `json:"page"`
@@ -123,6 +134,10 @@ type CollectionDetail struct {
 }
 
 type CollectionDetailResp struct {
+	Result interface{} `json:"result"`
+}
+
+type CreateNftResp struct {
 	Result interface{} `json:"result"`
 }
 

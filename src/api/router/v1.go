@@ -35,6 +35,8 @@ func loadV1(r *gin.Engine, svcCtx *svc.ServerCtx) {
 		collections.POST("/:address/:token_id/metadata", v1.ItemMetadataRefreshHandler(svcCtx))                               // 刷新NFT Item的metadata
 
 		collections.GET("/ranking", middleware.CacheApi(svcCtx.KvStore, 60), v1.TopRankingHandler(svcCtx)) // 获取NFT集合排名信息
+
+		collections.POST("/createNft", v1.CreateNft(svcCtx))
 	}
 
 	activities := apiV1.Group("/activities")
@@ -56,7 +58,8 @@ func loadV1(r *gin.Engine, svcCtx *svc.ServerCtx) {
 	}
 
 	uploadFile := apiV1.Group("/uploadFile")
+	uploadFile.Use(middleware.AuthMiddleWare(svcCtx.KvStore))
 	{
-		uploadFile.POST("/creatNFT", v1.UploadHandler(svcCtx)) // 批量查询出价信息
+		uploadFile.POST("/uploadNftFile", middleware.AuthMiddleWare(svcCtx.KvStore), v1.UploadHandler(svcCtx))
 	}
 }
